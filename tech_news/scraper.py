@@ -14,7 +14,10 @@ def fetch(url):
     except requests.ReadTimeout:
         return None
     finally:
-        return response.text if response else None
+        if response:
+            return response.text
+        else:
+            return None
 
 
 # Requisito 2
