@@ -1,4 +1,5 @@
 from time import sleep
+from bs4 import BeautifulSoup
 import requests
 import parsel
 
@@ -53,6 +54,28 @@ def scrape_next_page_link(html_content):
 # Requisito 4
 def scrape_news(html_content):
     """Seu código deve vir aqui"""
+    soup = BeautifulSoup(html_content, 'html.parser')
+    selector = parsel.Selector(html_content)
+
+    url = selector.css('link[rel="canonical"]::attr(href)').get()
+    title = selector.css('h1::text').get().strip()
+    timestamp = selector.css('.meta-date::text').get()
+    category = selector.css('.label::text').get()
+    writer = selector.css('.author a::text').get()
+    reading_time = int(selector.css(
+        '.meta-reading-time::text').get().split()[0])
+    summary = soup.find('div', {
+        'class': 'entry-content'}).find('p').text.strip()
+
+    return {
+        "url": url,
+        "title": title,
+        "timestamp": timestamp,
+        "writer": writer,
+        "reading_time": reading_time,
+        "summary": summary,
+        "category": category,
+    }
 
 
 # Requisito 5
