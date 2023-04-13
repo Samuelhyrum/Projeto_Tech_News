@@ -1,5 +1,6 @@
 from time import sleep
 from bs4 import BeautifulSoup
+from tech_news.database import create_news
 import requests
 import parsel
 
@@ -81,3 +82,19 @@ def scrape_news(html_content):
 # Requisito 5
 def get_tech_news(amount):
     """Seu código deve vir aqui"""
+    site = fetch("https://blog.betrybe.com/")
+    links = scrape_updates(site)
+    scrape_nxt_link = scrape_next_page_link(site)
+
+    while len(links) < amount:
+        nxt_page = fetch(scrape_nxt_link)
+        page_links = scrape_updates(nxt_page)
+        links.extend(page_links)
+        scrape_nxt_link = scrape_next_page_link(nxt_page)
+    return create_mongo_db(links[:amount])
+
+
+def create_mongo_db(links):
+    data = [scrape_news(fetch(link))for link in links]
+    create_news(data)
+    return data
