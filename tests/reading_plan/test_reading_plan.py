@@ -97,7 +97,7 @@ def test_reading_plan_group_news(mock_mongo_DB, mock_return_DB):
         ValueError, match="Valor 'available_time' deve ser maior que zero"
     ):
         ReadingPlanService.group_news_for_available_time(0)
-        
+
     reading_plan_service = ReadingPlanService
     reading_plan_service._db_news_proxy = MagicMock(
         return_value=mock_mongo_DB)
