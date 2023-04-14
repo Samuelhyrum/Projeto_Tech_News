@@ -19,10 +19,10 @@ def search_by_date(date):
     try:
         date_D_M_Y = datetime.strptime(date, "%Y-%m-%d").strftime("%d/%m/%Y")
         db_return = search_news({"timestamp": date_D_M_Y})
+
+        return lista_tuplas(db_return)
     except ValueError:
         raise ValueError("Data inválida")
-    else:
-        return lista_tuplas(db_return)
 
 
 # Requisito 9
